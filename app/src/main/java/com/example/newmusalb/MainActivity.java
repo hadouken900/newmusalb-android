@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -26,11 +28,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AlbumAdapter.OnItemClickListener {
 
     private List<Album> albums = new ArrayList<>();
     private RecyclerView recyclerView;
-    private AlbumAdapter albumAdapter = new AlbumAdapter(albums);
+    private AlbumAdapter albumAdapter = new AlbumAdapter(albums, this);
 
     private final String URL = "https://newmusalb.herokuapp.com/";
 
@@ -49,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         albums.add(new Album("jija", "asdfsd"));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(albumAdapter);
+
+
     }
 
     private void clientConnection() {
@@ -89,5 +93,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        String title = albums.get(position).getTitle();
+        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("spotify:search:"+title));
+        startActivity(intent);
     }
 }
